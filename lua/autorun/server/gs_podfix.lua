@@ -15,9 +15,18 @@ hook.Add("PlayerLeaveVehicle", "GS_PodFix", function(_, pVehicle)
 		local sName = "GS_PodFix_" .. pVehicle:EntIndex()
 
 		hook.Add("Think", sName, function()
-			if (not (pVehicle:IsValid() and pVehicle:GetSaveTable().m_bExitAnimOn)) then
-				pVehicle:AddEFlags(EFL_NO_THINK_FUNCTION)
+			if (pVehicle:IsValid()) then
+				local tSave = pVehicle:GetSaveTable()
+				
+				-- If set manually
+				if (tSave.m_bEnterAnimOn) then
+					hook.Remove("Think", sName)
+				elseif (not tSave.m_bExitAnimOn) then
+					pVehicle:AddEFlags(EFL_NO_THINK_FUNCTION)
 
+					hook.Remove("Think", sName)
+				end
+			else
 				hook.Remove("Think", sName)
 			end
 		end)
