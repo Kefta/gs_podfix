@@ -16,12 +16,12 @@ hook.Add("PlayerLeaveVehicle", "GS_PodFix", function(_, pVehicle)
 
 		hook.Add("Think", sName, function()
 			if (pVehicle:IsValid()) then
-				local tSave = pVehicle:GetSaveTable()
+				local fGetInternalVariable = pVehicle.GetInternalVariable
 				
 				-- If set manually
-				if (tSave.m_bEnterAnimOn) then
+				if (fGetInternalVariable(pVehicle, "m_bEnterAnimOn") == true) then
 					hook.Remove("Think", sName)
-				elseif (not tSave.m_bExitAnimOn) then
+				elseif (fGetInternalVariable(pVehicle, "m_bExitAnimOn") == false) then
 					pVehicle:AddEFlags(EFL_NO_THINK_FUNCTION)
 
 					hook.Remove("Think", sName)
